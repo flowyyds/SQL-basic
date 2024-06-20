@@ -1,0 +1,65 @@
+select distinct FirstName, LastName, JobTitle, Salary,
+CASE 
+        WHEN JobTitle = 'Salesman' THEN Salary+(Salary*.10)
+        WHEN JobTitle = 'Accountant' THEN Salary + (Salary*.05)
+        WHEN JobTitle = 'HR' THEN Salary +(Salary*.000001)
+        ELSE Salary+(Salary*.03)
+END AS SalaryAfterraise
+from master.dbo.EmployeeDemographics
+JOIN master.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+ORDER BY Salary
+
+
+select distinct FirstName, LastName, JobTitle, Salary,
+CASE 
+        WHEN JobTitle = 'Salesman' THEN Salary+(Salary*.10)
+        WHEN JobTitle = 'Accountant' THEN Salary + (Salary*.05)
+        WHEN JobTitle = 'HR' THEN Salary +(Salary*.000001)
+        ELSE Salary+(Salary*.03)
+END AS SalaryAfterraise
+from master.dbo.EmployeeDemographics
+JOIN master.dbo.EmployeeSalary
+ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+ORDER BY Salary
+
+
+select distinct JobTitle, AVG(Salary)
+from master.dbo.EmployeeDemographics
+join master.dbo.EmployeeSalary
+on EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+GROUP BY JobTitle
+HAVING AVG(Salary)>45000
+ORDER BY AVG(Salary)
+HAVING COUNT(JobTitle)>10
+
+/*******************************how to delete duplicated rows in sql********************* */
+----------------step 1
+ ROW_NUMBER() OVER(partition BY [EmployeeID] order by [EmployeeID]) as rownum
+
+----------------step 2
+CTE statement
+with statement
+
+WITH cte AS
+(
+    select EmployeeID, FirstName, LastName, ROW_NUMBER() OVER(partition by EmployeeID order by EmployeeID) as rownum
+    from master.dbo.EmployeeDemographics
+)
+DELETE from cte
+WHERE cte.rownum>1
+
+----------------step 3
+WITH cte AS
+
+(
+    select EmployeeID, FirstName, LastName, ROW_NUMBER() OVER(partition by EmployeeID order by EmployeeID) as rownum
+    from master.dbo.EmployeeDemographics
+)
+DELETE from cte
+WHERE cte.rownum>1
+
+select * 
+from master.dbo.EmployeeDemographics
+
+ 
